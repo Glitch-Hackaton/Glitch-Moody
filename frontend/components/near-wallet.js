@@ -110,8 +110,9 @@ export class Wallet {
         },
       ],
     });
-
-    return providers.getTransactionLastResult(outcome);
+    console.log("outcome : " + outcome);
+    // return providers.getTransactionLastResult(outcome);
+    return outcome;
   }
 
   // Get transaction result from the network

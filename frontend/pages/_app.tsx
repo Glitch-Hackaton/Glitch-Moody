@@ -4,6 +4,7 @@ import type { AppProps } from "next/app";
 import "../styles/react-calendar.css";
 import { RecoilRoot } from "recoil";
 import { Wallet } from "../components/near-wallet";
+import { Contract } from "../components/near-interface";
 import { useEffect, useState } from "react";
 import Splash from "./splash";
 import { useRouter } from "next/router";
@@ -25,7 +26,7 @@ export default function App({ Component, pageProps }: AppProps) {
   }, []);
 
   // const CONTRACT_ADDRESS = process.env.CONTRACT_NAME;
-  const CONTRACT_ADDRESS = "dev-1684561257321-37228500438771";
+  const CONTRACT_ADDRESS = "dev-1684617314546-37639185974764";
 
   // When creating the wallet you can optionally ask to create an access key
   // Having the key enables to call non-payable methods without interrupting the user to sign
@@ -40,15 +41,24 @@ export default function App({ Component, pageProps }: AppProps) {
     getSigned();
   }, [wallet]);
 
+  const contract = new Contract({
+    contractId: CONTRACT_ADDRESS,
+    walletToUse: wallet,
+  });
+
+  const additionalProps = {
+    wallet: wallet,
+    contract: contract,
+  };
+
   return (
     <RecoilRoot>
       <AntdConfigProvider>
         {/* <WalletProvider /> */}
-
         {sp ? (
           isSignedIn ? (
             <RootLayout>
-              <Component {...pageProps} />
+              <Component {...pageProps} {...additionalProps} />
             </RootLayout>
           ) : (
             <WalletConnect wallet={wallet} />

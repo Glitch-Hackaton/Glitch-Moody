@@ -52,7 +52,7 @@ const RootLayout = ({ children }: any) => {
               style={{ color: '#fff' }}
               onClick={() => history.back()}
             /> */}
-            <Image src={"/logo/로고.png"} alt="logo" width={130} height={32} />
+            <Image src={"/logo/로고.png"} alt="logo" width={130} height={25} />
             {/* <Button style={{ color: "#000" }} onClick={() => wallet.signOut()}>
               {wallet.accountId}
             </Button> */}

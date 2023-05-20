@@ -19,7 +19,7 @@ const contentStyle: React.CSSProperties = {
   color: "#000",
 };
 
-export default function Home() {
+export default function Home({ wallet, contract }: any) {
   const router = useRouter();
   const [messageApi, contextHolder] = message.useMessage();
   const [isEntry, setIsEntry] = useState(true);
@@ -28,12 +28,34 @@ export default function Home() {
   const [selectedDay, setSelectedDay] = useState<any>();
   const diaryData = useRecoilValue(diaryState);
   const isRecorded = useRecoilValue(recordState);
+  const [RecordResult, setResult] = useState([]);
 
   const today = new Date();
+
+  const getRecordedData = async () => {
+    const accountId = wallet.accountId || "glitchtest.testnet";
+    const startDate = moment().startOf("month").unix();
+    const endDate = moment().endOf("month").unix();
+    try {
+      const result = await contract.getRecode(accountId, startDate, endDate);
+
+      setResult(result);
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   useEffect(() => {
     !isRecorded && router.push("/choose");
   }, []);
+
+  useEffect(() => {
+    if (contract && wallet) {
+      getRecordedData();
+    }
+  }, [contract, wallet]);
+
+  getRecordedData();
 
   const onChange = (date: any) => {
     if (today < date) {
@@ -44,10 +66,14 @@ export default function Home() {
     setIsFuture(false);
     setIsEntry(false);
     const tile = diaryData.find(
-      (x) => x.date === moment(date).format("YYYY-MM-DD")
+      (x: any) =>
+        // moment.unix(Number(x[0])).format("YYYY-MM-DD") ===
+        // moment(date).format("YYYY-MM-DD")
+
+        x.date === moment(date).format("YYYY-MM-DD")
     );
     if (!tile) {
-      router.push("/write");
+      router.push({ pathname: "/write", query: { date: String(date) } });
     } else {
       setSelectedDay(tile);
     }
@@ -70,7 +96,7 @@ export default function Home() {
           <h3 style={contentStyle}>👯‍♂️ Join the refer-a-friend event!</h3>
         </div>
         <div>
-          <h3 style={contentStyle}>2</h3>
+          <h3 style={contentStyle}>👯‍♂️ Join the refer-a-friend event!</h3>
         </div>
       </Carousel>
       <motion.div
